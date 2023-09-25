@@ -1,10 +1,8 @@
 // ignore_for_file: prefer_const_declarations
 
-import 'dart:io';
 import 'package:financial_management_app/models/User.dart';
 import 'package:path/path.dart';
 import 'dart:async';
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
@@ -14,7 +12,7 @@ class DatabaseHelper {
   static final table = 'cashmanage_app';
 
   static final columnId = 'id';
-  static final columnName = 'username';
+  static final columnUserName = 'username';
   static final columnPassword = 'password';
 
   DatabaseHelper._privateConstructor();
@@ -39,7 +37,7 @@ class DatabaseHelper {
     await db.execute('''
           CREATE TABLE $table (
             $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
-            $columnName TEXT NOT NULL,
+            $columnUserName TEXT NOT NULL,
             $columnPassword TEXT NOT NULL
           )
           ''');

@@ -1,3 +1,5 @@
+import 'package:financial_management_app/data/database_helper.dart';
+import 'package:financial_management_app/models/User.dart';
 import 'package:financial_management_app/screens/login_view.dart';
 import 'package:flutter/material.dart';
 
@@ -10,9 +12,24 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final dbHelper = DatabaseHelper.instance;
+
+  // contollers insert user
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  void _showMessageInScaffold(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(message),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: SingleChildScrollView(
         // padding: const EdgeInsets.only(top: 100, left: 30, right: 30),
         scrollDirection: Axis.vertical,
@@ -38,6 +55,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 margin: const EdgeInsets.only(top: 20.0),
                 child: TextFormField(
+                  controller: usernameController,
                   decoration: InputDecoration(
                     enabledBorder: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(30.0)),
@@ -58,6 +76,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 margin: const EdgeInsets.only(top: 10.0),
                 child: TextFormField(
+                  controller: passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     enabledBorder: const OutlineInputBorder(
@@ -79,7 +98,12 @@ class _SignUpPageState extends State<SignUpPage> {
                 margin: const EdgeInsets.all(30.0),
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    String username = usernameController.text;
+                    String password = passwordController.text;
+
+                    _signup(username, password);
+                  },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepPurple),
                   child: const Text(
@@ -112,5 +136,20 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
+  }
+
+  void _signup(username, password) async {
+    // row to insert
+    Map<String, dynamic> row = {
+      DatabaseHelper.columnUserName: username,
+      DatabaseHelper.columnPassword: password
+    };
+    User user = User.fromMap(row);
+    final id = await dbHelper.insert(user);
+    _showMessageInScaffold('inserted row id: $id');
+  }
+
+  void _login(username, password) async{
+    
   }
 }
