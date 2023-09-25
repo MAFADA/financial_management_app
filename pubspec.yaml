@@ -38,6 +38,7 @@ dependencies:
   sqflite: ^2.3.0
   path_provider: ^2.1.1
   path: ^1.8.3
+  getwidget: ^2.0.4
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +65,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - images/money-management.png
+    - images/statistics.png
+    - images/M. Afada Nur Saiva Syahira.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
