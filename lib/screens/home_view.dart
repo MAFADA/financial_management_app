@@ -48,7 +48,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     fetchDataFromDatabase();
-    log(1);
   }
 
   Future<void> fetchDataFromDatabase() async {
