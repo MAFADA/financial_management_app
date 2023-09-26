@@ -120,6 +120,7 @@ class _AddOutcomePageState extends State<AddOutcomePage> {
                     hintName: 'Keterangan',
                     icon: Icons.description),
                 Container(
+                  margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
@@ -136,6 +137,7 @@ class _AddOutcomePageState extends State<AddOutcomePage> {
                   ),
                 ),
                 Container(
+                  margin: const EdgeInsets.only(left: 20, right: 20, top: 5),
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _insertDataKeuangan,
@@ -148,6 +150,7 @@ class _AddOutcomePageState extends State<AddOutcomePage> {
                   ),
                 ),
                 Container(
+                  margin: const EdgeInsets.only(left: 20, right: 20, top: 5),
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {

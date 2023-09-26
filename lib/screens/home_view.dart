@@ -216,64 +216,93 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     // padding: const EdgeInsets.all(5),
                     child: Center(
-                      child: GFIconButton(
-                        onPressed: () {
-                          Navigator.push(
+                      child: Container(
+                        width: 120,
+                        height: 120,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.deepPurple,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0))),
+                          onPressed: () {
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (_) =>
-                                      AddIncomePage(uid: widget.user_id)));
-                        },
-                        size: GFSize.LARGE,
-                        icon: const Icon(Icons.money),
+                                      AddIncomePage(uid: widget.user_id)),
+                            );
+                          },
+                          child: Image.asset('images/profits.png'),
+                        ),
                       ),
                     ),
                   ),
                   Container(
                     // padding: const EdgeInsets.all(5),
                     child: Center(
-                      child: GFIconButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) =>
-                                      AddOutcomePage(uid: widget.user_id)));
-                        },
-                        size: GFSize.LARGE,
-                        icon: const Icon(Icons.money_off),
+                      child: Container(
+                        width: 120,
+                        height: 120,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.deepPurple,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0))),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) =>
+                                        AddOutcomePage(uid: widget.user_id)));
+                          },
+                          child: Image.asset('images/outcome.png'),
+                        ),
                       ),
                     ),
                   ),
                   Container(
                     // padding: const EdgeInsets.all(5),
                     child: Center(
-                      child: GFIconButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) =>
-                                      DetailCashFlowPage(uid: widget.user_id)));
-                        },
-                        size: GFSize.LARGE,
-                        icon: const Icon(Icons.manage_search_outlined),
+                      child: Container(
+                        width: 120,
+                        height: 120,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.deepPurple,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0))),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => DetailCashFlowPage(
+                                        uid: widget.user_id)));
+                          },
+                          child: Image.asset('images/files.png'),
+                        ),
                       ),
                     ),
                   ),
                   Container(
                     // padding: const EdgeInsets.all(5),
                     child: Center(
-                      child: GFIconButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) =>
-                                      SettingPage(uid: widget.user_id)));
-                        },
-                        size: GFSize.LARGE,
-                        icon: const Icon(CupertinoIcons.gear_alt),
+                      child: Container(
+                        width: 120,
+                        height: 120,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.deepPurple,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0))),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) =>
+                                        SettingPage(uid: widget.user_id)));
+                          },
+                          child: Image.asset('images/settings.png'),
+                        ),
                       ),
                     ),
                   ),

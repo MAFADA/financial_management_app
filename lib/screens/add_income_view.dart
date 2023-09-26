@@ -121,6 +121,7 @@ class _AddIncomePageState extends State<AddIncomePage> {
                     hintName: 'Keterangan',
                     icon: Icons.description),
                 Container(
+                  margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
@@ -137,6 +138,7 @@ class _AddIncomePageState extends State<AddIncomePage> {
                   ),
                 ),
                 Container(
+                  margin: const EdgeInsets.only(left: 20, right: 20, top: 5),
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _insertDataKeuangan,
@@ -149,6 +151,7 @@ class _AddIncomePageState extends State<AddIncomePage> {
                   ),
                 ),
                 Container(
+                  margin: const EdgeInsets.only(left: 20, right: 20, top: 5),
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {

@@ -69,6 +69,10 @@ flutter:
     - images/money-management.png
     - images/statistics.png
     - images/M. Afada Nur Saiva Syahira.png
+    - images/outcome.png
+    - images/profits.png
+    - images/files.png
+    - images/settings.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
