@@ -3,8 +3,10 @@
 import 'package:financial_management_app/models/Keuangan.dart';
 import 'package:financial_management_app/models/User.dart';
 import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'package:sqflite/sqflite.dart';
+import 'dart:io' as io;
 
 class DatabaseHelper {
   static final _databaseName = "  cashmanage_app.db";
@@ -36,7 +38,8 @@ class DatabaseHelper {
 
   // opens the database (and creates it if it doesn't exist)
   _initDatabase() async {
-    String path = join(await getDatabasesPath(), _databaseName);
+    io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentsDirectory.path, _databaseName);
     return await openDatabase(path,
         version: _databaseVersion, onCreate: _onCreate);
   }
@@ -97,6 +100,22 @@ class DatabaseHelper {
   Future<int?> saveDataKeuangan(Keuangan keuangan) async {
     Database? db = await instance.database;
     return await db!.insert(tableKeuangan, keuangan.toMap());
+  }
+
+  Future calculateTotalIncome() async {
+    Database? db = await instance.database;
+    var result;
+    return result = await db!.rawQuery(
+        "SELECT SUM($columnNominal) as total_pemasukan FROM keuangan WHERE tipe = 'Pemasukan'");
+    // print(result);
+  }
+
+  Future calculateTotalOutcome() async {
+    Database? db = await instance.database;
+    var result;
+    return result = await db!.rawQuery(
+        "SELECT SUM($columnNominal) as total_pengeluaran FROM keuangan WHERE tipe = 'Pengeluaran'");
+    // print(result);
   }
 
   // PENGELUARAN

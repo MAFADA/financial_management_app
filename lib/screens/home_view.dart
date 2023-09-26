@@ -1,3 +1,6 @@
+// ignore_for_file: avoid_unnecessary_containers
+
+import 'package:financial_management_app/data/database_helper.dart';
 import 'package:financial_management_app/screens/add_income_view.dart';
 import 'package:financial_management_app/screens/add_outcome_view.dart';
 import 'package:financial_management_app/screens/detail_cash_flow_view.dart';
@@ -10,10 +13,38 @@ class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  final dbHelper = DatabaseHelper.instance;
+  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  late String _totalPemasukan;
+  late String _totalPengeluaran;
+
+  Future<String> _calcTotalIncome() async {
+    var total = (await dbHelper.calculateTotalIncome())[0]['total_pemasukan'];
+    print(total);
+    return _totalPemasukan = total.toString();
+    // setState(() => _totalPemasukan = total);
+  }
+
+  Future<String> _calcTotalOutcome() async {
+    var total =
+        (await dbHelper.calculateTotalOutcome())[0]['total_pengeluaran'];
+    print(total);
+    return _totalPengeluaran = total.toString();
+    // setState(() => _totalPengeluaran = total);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,22 +63,99 @@ class _HomePageState extends State<HomePage> {
                 fontSize: 20.0,
               ),
             ),
-            const Text(
-              'Pengeluaran: ',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.red,
-                fontSize: 15.0,
+            SizedBox(
+              width: double.infinity,
+              child: Center(
+                child: FutureBuilder<String>(
+                  future: _calcTotalOutcome(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(),
+                          Visibility(
+                            visible: snapshot.hasData,
+                            child: Text(
+                              snapshot.data,
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 24),
+                            ),
+                          )
+                        ],
+                      );
+                    } else if (snapshot.connectionState ==
+                        ConnectionState.done) {
+                      if (snapshot.hasError) {
+                        return Text('Pengeluaran: Rp. -${snapshot.error}');
+                      } else if (snapshot.hasData) {
+                        // ignore: prefer_interpolation_to_compose_strings
+                        return Text('Pengeluaran: Rp. ' + snapshot.data,
+                            style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold));
+                      } else {
+                        return const Text('Empty data');
+                      }
+                    } else {
+                      return Text('State: ${snapshot.connectionState}');
+                    }
+                  },
+                ),
               ),
             ),
-            const Text(
-              'Pemasukan: ',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.green,
-                fontSize: 15.0,
+            // const Text(
+            //   'Pengeluaran: ',
+            //   textAlign: TextAlign.center,
+            //   style: TextStyle(
+            //     fontWeight: FontWeight.bold,
+            //     color: Colors.red,
+            //     fontSize: 15.0,
+            //   ),
+            // ),
+            SizedBox(
+              width: double.infinity,
+              child: Center(
+                child: FutureBuilder<String>(
+                  future: _calcTotalIncome(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(),
+                          Visibility(
+                            visible: snapshot.hasData,
+                            child: Text(
+                              snapshot.data,
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 24),
+                            ),
+                          )
+                        ],
+                      );
+                    } else if (snapshot.connectionState ==
+                        ConnectionState.done) {
+                      if (snapshot.hasError) {
+                        return Text('Pemasukan: Rp. -${snapshot.error}');
+                      } else if (snapshot.hasData) {
+                        // ignore: prefer_interpolation_to_compose_strings
+                        return Text('Pemasukan: Rp. ' + snapshot.data,
+                            style: const TextStyle(
+                                color: Colors.green,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold));
+                      } else {
+                        return const Text('Empty data');
+                      }
+                    } else {
+                      return Text('State: ${snapshot.connectionState}');
+                    }
+                  },
+                ),
               ),
             ),
             // TODO Grafik Pengeluaran dan Pemasukan
@@ -74,10 +182,10 @@ class _HomePageState extends State<HomePage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) => AddIncomePage()));
+                                  builder: (_) => const AddIncomePage()));
                         },
                         size: GFSize.LARGE,
-                        icon: Icon(Icons.money),
+                        icon: const Icon(Icons.money),
                       ),
                     ),
                   ),
@@ -89,10 +197,10 @@ class _HomePageState extends State<HomePage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) => AddOutcomePage()));
+                                  builder: (_) => const AddOutcomePage()));
                         },
                         size: GFSize.LARGE,
-                        icon: Icon(Icons.money_off),
+                        icon: const Icon(Icons.money_off),
                       ),
                     ),
                   ),
@@ -104,10 +212,10 @@ class _HomePageState extends State<HomePage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) => DetailCashFlowPage()));
+                                  builder: (_) => const DetailCashFlowPage()));
                         },
                         size: GFSize.LARGE,
-                        icon: Icon(Icons.manage_search_outlined),
+                        icon: const Icon(Icons.manage_search_outlined),
                       ),
                     ),
                   ),
@@ -120,7 +228,7 @@ class _HomePageState extends State<HomePage> {
                               MaterialPageRoute(builder: (_) => SettingPage()));
                         },
                         size: GFSize.LARGE,
-                        icon: Icon(CupertinoIcons.gear_alt),
+                        icon: const Icon(CupertinoIcons.gear_alt),
                       ),
                     ),
                   ),
