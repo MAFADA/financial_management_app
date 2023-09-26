@@ -187,6 +187,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   series: <ChartSeries>[
                     LineSeries<ChartData, DateTime>(
+                      color: Colors.green,
                       dataSource: incomeData,
                       xValueMapper: (ChartData data, _) => data.date,
                       yValueMapper: (ChartData data, _) => data.money,
