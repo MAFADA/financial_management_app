@@ -135,11 +135,4 @@ class DatabaseHelper {
     final db = await database;
     return await db?.query(tableKeuangan, orderBy: '$columnTanggal DESC');
   }
-
-  // PENGELUARAN
-  // Insert Data Pengeluaran
-  // Future<int?> saveDataPengeluaran(Pengeluaran pengeluaran) async {
-  //   Database? db = await instance.database;
-  //   return await db!.insert(tablePengeluaran, pengeluaran.toMap());
-  // }
 }
