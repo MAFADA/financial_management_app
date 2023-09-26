@@ -2,9 +2,7 @@ import 'package:financial_management_app/components/getTextFormField.dart';
 import 'package:financial_management_app/data/database_helper.dart';
 import 'package:financial_management_app/models/Keuangan.dart';
 import 'package:financial_management_app/screens/home_view.dart';
-import 'package:financial_management_app/screens/login_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class AddOutcomePage extends StatefulWidget {
   const AddOutcomePage({super.key});

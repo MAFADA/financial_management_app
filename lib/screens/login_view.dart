@@ -2,7 +2,6 @@
 
 import 'package:financial_management_app/components/getTextFormField.dart';
 import 'package:financial_management_app/data/database_helper.dart';
-import 'package:financial_management_app/models/User.dart';
 import 'package:financial_management_app/screens/home_view.dart';
 import 'package:financial_management_app/screens/signup_view.dart';
 import 'package:flutter/material.dart';
