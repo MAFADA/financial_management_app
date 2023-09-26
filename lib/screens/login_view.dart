@@ -134,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
         if (userData != null) {
           Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (_) => HomePage()),
+              MaterialPageRoute(builder: (_) => HomePage(user_id: userData.id,)),
               (Route<dynamic> route) => false);
         } else {
           _showMessageInScaffold('User not Found');

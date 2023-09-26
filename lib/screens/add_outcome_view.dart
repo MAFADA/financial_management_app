@@ -5,8 +5,8 @@ import 'package:financial_management_app/screens/home_view.dart';
 import 'package:flutter/material.dart';
 
 class AddOutcomePage extends StatefulWidget {
-  const AddOutcomePage({super.key});
-
+  const AddOutcomePage({super.key, required this.uid});
+  final int? uid;
   @override
   // ignore: library_private_types_in_public_api
   _AddOutcomePageState createState() => _AddOutcomePageState();
@@ -106,7 +106,7 @@ class _AddOutcomePageState extends State<AddOutcomePage> {
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => HomePage()));
+                          MaterialPageRoute(builder: (_) => HomePage(user_id: widget.uid,)));
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.deepPurple),
@@ -150,7 +150,7 @@ class _AddOutcomePageState extends State<AddOutcomePage> {
         await dbHelper.saveDataKeuangan(keuangan).then((pemasukan) {
           _showMessageInScaffold('Successfully Saved');
           Navigator.push(
-              context, MaterialPageRoute(builder: (_) => HomePage()));
+              context, MaterialPageRoute(builder: (_) => HomePage(user_id: widget.uid,)));
         }).catchError((error) {
           _showMessageInScaffold('Error insert pengeluaran fail');
           print(error);

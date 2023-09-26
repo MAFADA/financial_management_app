@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class DetailCashFlowPage extends StatefulWidget {
-  const DetailCashFlowPage({super.key});
-
+  const DetailCashFlowPage({super.key, required this.uid});
+  final int? uid;
   @override
   // ignore: library_private_types_in_public_api
   _DetailCashFlowState createState() => _DetailCashFlowState();

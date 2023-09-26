@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_unnecessary_containers, unused_field
+// ignore_for_file: avoid_unnecessary_containers, unused_field, non_constant_identifier_names, prefer_typing_uninitialized_variables
 
 import 'package:financial_management_app/data/database_helper.dart';
 import 'package:financial_management_app/screens/add_income_view.dart';
@@ -10,7 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, required this.user_id});
+  final int? user_id;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -171,7 +172,8 @@ class _HomePageState extends State<HomePage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) => const AddIncomePage()));
+                                  builder: (_) =>
+                                      AddIncomePage(uid: widget.user_id)));
                         },
                         size: GFSize.LARGE,
                         icon: const Icon(Icons.money),
@@ -186,7 +188,8 @@ class _HomePageState extends State<HomePage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) => const AddOutcomePage()));
+                                  builder: (_) =>
+                                      AddOutcomePage(uid: widget.user_id)));
                         },
                         size: GFSize.LARGE,
                         icon: const Icon(Icons.money_off),
@@ -201,7 +204,8 @@ class _HomePageState extends State<HomePage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) => const DetailCashFlowPage()));
+                                  builder: (_) =>
+                                      DetailCashFlowPage(uid: widget.user_id)));
                         },
                         size: GFSize.LARGE,
                         icon: const Icon(Icons.manage_search_outlined),
@@ -213,8 +217,11 @@ class _HomePageState extends State<HomePage> {
                     child: Center(
                       child: GFIconButton(
                         onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (_) => SettingPage()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) =>
+                                      SettingPage(uid: widget.user_id)));
                         },
                         size: GFSize.LARGE,
                         icon: const Icon(CupertinoIcons.gear_alt),

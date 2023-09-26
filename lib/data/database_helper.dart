@@ -88,23 +88,23 @@ class DatabaseHelper {
   }
 
   // Update Data User
-  Future<bool?> checkPassword(String username, String currentPassword) async {
+  Future<bool?> checkPassword(int id, String currentPassword) async {
     final db = await database;
     final result = await db?.query(
-      'users',
-      where: 'username = ? AND password = ?',
-      whereArgs: [username, currentPassword],
+      'cashmanage_app',
+      where: 'id = ? AND password = ?',
+      whereArgs: [id, currentPassword],
     );
     return result?.isNotEmpty;
   }
 
-  Future<void> updatePassword(String username, String newPassword) async {
+  Future<void> updatePassword(int id, String newPassword) async {
     final db = await database;
     await db?.update(
-      'users',
+      'cashmanage_app',
       {'password': newPassword},
-      where: 'username = ?',
-      whereArgs: [username],
+      where: 'id = ?',
+      whereArgs: [id],
     );
   }
 
