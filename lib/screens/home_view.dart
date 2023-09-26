@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_unnecessary_containers
+// ignore_for_file: avoid_unnecessary_containers, unused_field
 
 import 'package:financial_management_app/data/database_helper.dart';
 import 'package:financial_management_app/screens/add_income_view.dart';
@@ -19,11 +19,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final dbHelper = DatabaseHelper.instance;
-  final _formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  late String _totalPemasukan;
-  late String _totalPengeluaran;
+  String? _totalPemasukan;
+  String? _totalPengeluaran;
 
   Future<String> _calcTotalIncome() async {
     var total = (await dbHelper.calculateTotalIncome())[0]['total_pemasukan'];
@@ -66,7 +64,7 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               width: double.infinity,
               child: Center(
-                child: FutureBuilder<String>(
+                child: FutureBuilder(
                   future: _calcTotalOutcome(),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -88,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                     } else if (snapshot.connectionState ==
                         ConnectionState.done) {
                       if (snapshot.hasError) {
-                        return Text('Pengeluaran: Rp. -${snapshot.error}');
+                        return const Text('Pengeluaran: Rp. -');
                       } else if (snapshot.hasData) {
                         // ignore: prefer_interpolation_to_compose_strings
                         return Text('Pengeluaran: Rp. ' + snapshot.data,
@@ -106,19 +104,10 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            // const Text(
-            //   'Pengeluaran: ',
-            //   textAlign: TextAlign.center,
-            //   style: TextStyle(
-            //     fontWeight: FontWeight.bold,
-            //     color: Colors.red,
-            //     fontSize: 15.0,
-            //   ),
-            // ),
             SizedBox(
               width: double.infinity,
               child: Center(
-                child: FutureBuilder<String>(
+                child: FutureBuilder(
                   future: _calcTotalIncome(),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {

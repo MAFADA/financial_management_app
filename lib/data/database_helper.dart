@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_declarations
+// ignore_for_file: prefer_const_declarations, unused_local_variable
 
 import 'package:financial_management_app/models/Keuangan.dart';
 import 'package:financial_management_app/models/User.dart';
@@ -88,11 +88,24 @@ class DatabaseHelper {
   }
 
   // Update Data User
-  Future<int?> update(User user) async {
-    Database? db = await instance.database;
-    int id = user.toMap()['id'];
-    return await db!
-        .update(table, user.toMap(), where: '$columnId = ?', whereArgs: [id]);
+  Future<bool?> checkPassword(String username, String currentPassword) async {
+    final db = await database;
+    final result = await db?.query(
+      'users',
+      where: 'username = ? AND password = ?',
+      whereArgs: [username, currentPassword],
+    );
+    return result?.isNotEmpty;
+  }
+
+  Future<void> updatePassword(String username, String newPassword) async {
+    final db = await database;
+    await db?.update(
+      'users',
+      {'password': newPassword},
+      where: 'username = ?',
+      whereArgs: [username],
+    );
   }
 
   // PEMASUKAN
@@ -104,7 +117,7 @@ class DatabaseHelper {
 
   Future calculateTotalIncome() async {
     Database? db = await instance.database;
-    var result;
+    List<Map<String, Object?>> result;
     return result = await db!.rawQuery(
         "SELECT SUM($columnNominal) as total_pemasukan FROM keuangan WHERE tipe = 'Pemasukan'");
     // print(result);
@@ -112,10 +125,15 @@ class DatabaseHelper {
 
   Future calculateTotalOutcome() async {
     Database? db = await instance.database;
-    var result;
+    List<Map<String, Object?>> result;
     return result = await db!.rawQuery(
         "SELECT SUM($columnNominal) as total_pengeluaran FROM keuangan WHERE tipe = 'Pengeluaran'");
     // print(result);
+  }
+
+  Future<List<Map<String, Object?>>?> fetchDataCashFlow() async {
+    final db = await database;
+    return await db?.query(tableKeuangan);
   }
 
   // PENGELUARAN
