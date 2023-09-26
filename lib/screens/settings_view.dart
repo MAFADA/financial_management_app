@@ -3,7 +3,6 @@
 import 'package:financial_management_app/components/getTextFormField.dart';
 import 'package:financial_management_app/data/database_helper.dart';
 import 'package:financial_management_app/screens/home_view.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SettingPage extends StatefulWidget {
@@ -133,11 +132,13 @@ class _SettingPageState extends State<SettingPage> {
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => HomePage(
-                                  user_id: widget.uid,
-                                )));
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => HomePage(
+                          user_id: widget.uid,
+                        ),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepPurple),
