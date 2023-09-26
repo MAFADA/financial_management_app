@@ -4,7 +4,7 @@ class Keuangan {
   int? _id;
   late String _tanggal;
   late String _tipe;
-  late int _nominal;
+  late double _nominal;
   late String _keterangan;
 
   Keuangan(this._tanggal, this._tipe, this._nominal, this._keterangan);
@@ -17,7 +17,7 @@ class Keuangan {
   }
 
   String get tanggal => _tanggal;
-  int get nominal => _nominal;
+  double get nominal => _nominal;
   String get keterangan => _keterangan;
   String get tipe => _tipe;
 

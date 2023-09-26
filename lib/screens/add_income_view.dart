@@ -3,6 +3,7 @@ import 'package:financial_management_app/data/database_helper.dart';
 import 'package:financial_management_app/models/Keuangan.dart';
 import 'package:financial_management_app/screens/home_view.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class AddIncomePage extends StatefulWidget {
   const AddIncomePage({super.key, required this.uid});
@@ -59,11 +60,55 @@ class _AddIncomePageState extends State<AddIncomePage> {
                 const SizedBox(
                   height: 20.0,
                 ),
-                getTextFormField(
-                  ctr: tanggalController,
-                  hintName: 'Tanggal',
-                  icon: Icons.date_range,
-                  inputType: TextInputType.datetime,
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  margin: const EdgeInsets.only(top: 20.0),
+                  child: TextFormField(
+                    readOnly: true,
+                    onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(
+                              2000), //DateTime.now() - not to allow to choose before today.
+                          lastDate: DateTime(2101));
+
+                      if (pickedDate != null) {
+                        print(
+                            pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                        String formattedDate =
+                            DateFormat('yyyy-MM-dd').format(pickedDate);
+                        print(
+                            formattedDate); //formatted date output using intl package =>  2021-03-16
+                        //you can implement different kind of Date Format here according to your requirement
+
+                        setState(() {
+                          tanggalController.text =
+                              formattedDate; //set output date to TextField value.
+                        });
+                      } else {
+                        print("Date is not selected");
+                      }
+                    },
+                    controller: tanggalController,
+                    validator: (val) =>
+                        val!.isEmpty ? 'Please Enter Tanggal' : null,
+                    decoration: InputDecoration(
+                      enabledBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                        borderSide: BorderSide(color: Colors.transparent),
+                      ),
+                      focusedBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                        borderSide: BorderSide(color: Colors.deepPurple),
+                      ),
+                      prefixIcon: Icon(Icons.date_range),
+                      hintText: 'Tanggal',
+                      labelText: 'Tanggal',
+                      fillColor: Colors.grey[200],
+                      filled: true,
+                    ),
+                  ),
                 ),
                 getTextFormField(
                   ctr: pemasukanController,
@@ -133,7 +178,7 @@ class _AddIncomePageState extends State<AddIncomePage> {
   _insertDataKeuangan() async {
     String tanggal = tanggalController.text;
     String tipe = 'Pemasukan';
-    int nominal = int.parse(pemasukanController.text);
+    double nominal = double.parse(pemasukanController.text);
     String keterangan = keteranganController.text;
 
     if (_formKey.currentState!.validate()) {
@@ -156,7 +201,11 @@ class _AddIncomePageState extends State<AddIncomePage> {
         await dbHelper.saveDataKeuangan(keuangan).then((pemasukan) {
           _showMessageInScaffold('Successfully Saved');
           Navigator.push(
-              context, MaterialPageRoute(builder: (_) => HomePage(user_id: widget.uid,)));
+              context,
+              MaterialPageRoute(
+                  builder: (_) => HomePage(
+                        user_id: widget.uid,
+                      )));
         }).catchError((error) {
           _showMessageInScaffold('Error insert pemasukkan fail');
           print(error);

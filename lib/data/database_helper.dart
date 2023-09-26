@@ -58,7 +58,7 @@ class DatabaseHelper {
             $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
             $columnTipe TEXT NOT NULL,
             $columnTanggal TEXT NOT NULL,
-            $columnNominal INTEGER NOT NULL,
+            $columnNominal REAL NOT NULL,
             $columnKeterangan TEXT NOT NULL
           )
           ''');
@@ -133,7 +133,7 @@ class DatabaseHelper {
 
   Future<List<Map<String, Object?>>?> fetchDataCashFlow() async {
     final db = await database;
-    return await db?.query(tableKeuangan);
+    return await db?.query(tableKeuangan, orderBy: '$columnTanggal DESC');
   }
 
   // PENGELUARAN
