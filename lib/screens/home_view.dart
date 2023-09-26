@@ -11,6 +11,7 @@ import 'package:financial_management_app/screens/settings_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class HomePage extends StatefulWidget {
@@ -61,7 +62,8 @@ class _HomePageState extends State<HomePage> {
               row['nominal'] as double))
           .toList();
 
-      expenseData = result.where((row) => row['tipe'] == 'Pengeluaran')
+      expenseData = result
+          .where((row) => row['tipe'] == 'Pengeluaran')
           .map((row) => ChartData(DateTime.parse(row['tanggal'] as String),
               row['nominal'] as double))
           .toList();
@@ -177,7 +179,9 @@ class _HomePageState extends State<HomePage> {
               child: SizedBox(
                 width: 350,
                 child: SfCartesianChart(
-                  primaryXAxis: DateTimeAxis(),
+                  primaryXAxis: DateTimeAxis(
+                    dateFormat: DateFormat.yMd(),
+                  ),
                   primaryYAxis: NumericAxis(
                     title: AxisTitle(text: 'Money'),
                   ),
