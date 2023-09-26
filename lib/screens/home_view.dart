@@ -62,8 +62,7 @@ class _HomePageState extends State<HomePage> {
               row['nominal'] as double))
           .toList();
 
-      expenseData = result!
-          .where((row) => row['tipe'] == 'Pengeluaran')
+      expenseData = result.where((row) => row['tipe'] == 'Pengeluaran')
           .map((row) => ChartData(DateTime.parse(row['tanggal'] as String),
               row['nominal'] as double))
           .toList();
