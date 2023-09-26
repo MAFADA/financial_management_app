@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_declarations
 
+import 'package:financial_management_app/models/Keuangan.dart';
 import 'package:financial_management_app/models/User.dart';
 import 'package:path/path.dart';
 import 'dart:async';
@@ -14,6 +15,13 @@ class DatabaseHelper {
   static final columnId = 'id';
   static final columnUserName = 'username';
   static final columnPassword = 'password';
+
+  static final tableKeuangan = 'keuangan';
+
+  static final columnTanggal = 'tanggal';
+  static final columnTipe = 'tipe';
+  static final columnNominal = 'nominal';
+  static final columnKeterangan = 'keterangan';
 
   DatabaseHelper._privateConstructor();
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
@@ -41,16 +49,39 @@ class DatabaseHelper {
             $columnPassword TEXT NOT NULL
           )
           ''');
+
+    await db.execute('''
+          CREATE TABLE $tableKeuangan (
+            $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
+            $columnTipe TEXT NOT NULL,
+            $columnTanggal TEXT NOT NULL,
+            $columnNominal INTEGER NOT NULL,
+            $columnKeterangan TEXT NOT NULL
+          )
+          ''');
   }
 
   // HELPER METHODS
 
   // USER
   // Insert Data User
-  Future<int?> insert(User user) async {
+  Future<int?> saveData(User user) async {
     Database? db = await instance.database;
-    return await db!
-        .insert(table, {'username': user.username, 'password': user.password});
+    return await db!.insert(table, user.toMap());
+  }
+
+  // Login
+  Future<User?> getUser(String username, String password) async {
+    Database? db = await instance.database;
+    var res = await db?.rawQuery("SELECT * FROM $table WHERE "
+        "$columnUserName = '$username' AND "
+        "$columnPassword = '$password'");
+
+    if (res!.isNotEmpty) {
+      return User.fromMap(res.first);
+    }
+
+    return null;
   }
 
   // Update Data User
@@ -60,4 +91,18 @@ class DatabaseHelper {
     return await db!
         .update(table, user.toMap(), where: '$columnId = ?', whereArgs: [id]);
   }
+
+  // PEMASUKAN
+  // Insert Data Pemasukan
+  Future<int?> saveDataKeuangan(Keuangan keuangan) async {
+    Database? db = await instance.database;
+    return await db!.insert(tableKeuangan, keuangan.toMap());
+  }
+
+  // PENGELUARAN
+  // Insert Data Pengeluaran
+  // Future<int?> saveDataPengeluaran(Pengeluaran pengeluaran) async {
+  //   Database? db = await instance.database;
+  //   return await db!.insert(tablePengeluaran, pengeluaran.toMap());
+  // }
 }

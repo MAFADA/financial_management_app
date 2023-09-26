@@ -1,5 +1,8 @@
 // ignore_for_file: unused_field
 
+import 'package:financial_management_app/components/getTextFormField.dart';
+import 'package:financial_management_app/data/database_helper.dart';
+import 'package:financial_management_app/models/User.dart';
 import 'package:financial_management_app/screens/home_view.dart';
 import 'package:financial_management_app/screens/signup_view.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +16,26 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final dbHelper = DatabaseHelper.instance;
+
+  // contollers insert user
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final _formKey = new GlobalKey<FormState>();
+
+  void _showMessageInScaffold(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(message),
+    ));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,54 +66,22 @@ class _LoginPageState extends State<LoginPage> {
                   fontSize: 20.0,
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                margin: const EdgeInsets.only(top: 20.0),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    enabledBorder: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                      borderSide: BorderSide(color: Colors.deepPurple),
-                    ),
-                    prefixIcon: const Icon(Icons.person),
-                    hintText: 'Username',
-                    fillColor: Colors.grey[200],
-                    filled: true,
-                  ),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                margin: const EdgeInsets.only(top: 10.0),
-                child: TextFormField(
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    enabledBorder: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                      borderSide: BorderSide(color: Colors.deepPurple),
-                    ),
-                    prefixIcon: const Icon(Icons.lock),
-                    hintText: 'Password',
-                    fillColor: Colors.grey[200],
-                    filled: true,
-                  ),
-                ),
+              getTextFormField(
+                  ctr: usernameController,
+                  hintName: 'Username',
+                  icon: Icons.person),
+              getTextFormField(
+                ctr: passwordController,
+                hintName: 'Password',
+                icon: Icons.lock,
+                isObscureText: true,
               ),
               Container(
                 margin: const EdgeInsets.all(30.0),
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                     Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => HomePage()));
+                    _login();
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepPurple),
@@ -107,8 +98,10 @@ class _LoginPageState extends State<LoginPage> {
                     const Text('Does not have an account?'),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => SignUpPage()));
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (_) => SignUpPage()),
+                            (Route<dynamic> route) => false);
                       },
                       child: const Text(
                         'Signup',
@@ -124,5 +117,33 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  _login() async {
+    String uname = usernameController.text;
+    String pass = passwordController.text;
+
+    if (uname.isEmpty) {
+      _showMessageInScaffold('Please enter username');
+    } else if (pass.isEmpty) {
+      _showMessageInScaffold('Please enter password');
+    } else {
+      await dbHelper
+          .getUser(uname, pass)
+          // ignore: non_constant_identifier_names
+          .then((userData) {
+        if (userData != null) {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => HomePage()),
+              (Route<dynamic> route) => false);
+        } else {
+          _showMessageInScaffold('User not Found');
+        }
+      }).catchError((error) {
+        print(error);
+        _showMessageInScaffold('Error Login Fail');
+      });
+    }
   }
 }
