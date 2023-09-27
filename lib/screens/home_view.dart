@@ -280,20 +280,6 @@ class _HomePageState extends State<HomePage> {
 
     // final result = await db?.query('keuangan');
 
-    // setState(() {
-    //   incomeData = result!
-    //       .where((row) => row['tipe'] == 'Pemasukan')
-    //       .map((row) => ChartData(DateTime.parse(row['tanggal'] as String),
-    //           row['nominal'] as double))
-    //       .toList();
-
-    //   expenseData = result
-    //       .where((row) => row['tipe'] == 'Pengeluaran')
-    //       .map((row) => ChartData(DateTime.parse(row['tanggal'] as String),
-    //           row['nominal'] as double))
-    //       .toList();
-    // });
-
     setState(() {
       incomeData = result!
           .where((row) => row['tipe'] == 'Pemasukan')
