@@ -150,7 +150,7 @@ class DatabaseHelper {
     WHERE strftime('%Y-%m', tanggal) = '$currentMonth' AND tipe = 'Pengeluaran'
   ''');
 
-    final totalIncome = result?.first['total_income'];
+    final totalIncome = result?.first['total_outcome'];
     return totalIncome != null ? totalIncome as double : 0.0;
   }
 }

@@ -6,7 +6,6 @@ import 'package:financial_management_app/screens/add_income_view.dart';
 import 'package:financial_management_app/screens/add_outcome_view.dart';
 import 'package:financial_management_app/screens/detail_cash_flow_view.dart';
 import 'package:financial_management_app/screens/settings_view.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -123,14 +122,16 @@ class _HomePageState extends State<HomePage> {
                       xValueMapper: (ChartData data, _) => data.date,
                       yValueMapper: (ChartData data, _) => data.money,
                       name: 'Income',
-                      dataLabelSettings: const DataLabelSettings(isVisible: true),
+                      dataLabelSettings:
+                          const DataLabelSettings(isVisible: true),
                     ),
                     LineSeries<ChartData, DateTime>(
                       dataSource: expenseData,
                       xValueMapper: (ChartData data, _) => data.date,
                       yValueMapper: (ChartData data, _) => data.money,
                       name: 'Expenses',
-                      dataLabelSettings: const DataLabelSettings(isVisible: true),
+                      dataLabelSettings:
+                          const DataLabelSettings(isVisible: true),
                     ),
                   ],
                 ),
@@ -269,7 +270,15 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> fetchDataFromDatabase() async {
     final db = await dbHelper.database;
-    final result = await db?.query('keuangan');
+    final now = DateTime.now();
+    final currentMonth = DateFormat('yyyy-MM').format(now);
+
+    final result = await db?.rawQuery(
+      "SELECT * FROM keuangan WHERE strftime('%Y-%m', tanggal) = ?",
+      [currentMonth],
+    );
+
+    // final result = await db?.query('keuangan');
 
     setState(() {
       incomeData = result!
