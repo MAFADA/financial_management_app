@@ -115,24 +115,42 @@ class DatabaseHelper {
     return await db!.insert(tableKeuangan, keuangan.toMap());
   }
 
-  Future calculateTotalIncome() async {
-    Database? db = await instance.database;
-    List<Map<String, Object?>> result;
-    return result = await db!.rawQuery(
-        "SELECT SUM($columnNominal) as total_pemasukan FROM keuangan WHERE tipe = 'Pemasukan'");
-    // print(result);
-  }
-
-  Future calculateTotalOutcome() async {
-    Database? db = await instance.database;
-    List<Map<String, Object?>> result;
-    return result = await db!.rawQuery(
-        "SELECT SUM($columnNominal) as total_pengeluaran FROM keuangan WHERE tipe = 'Pengeluaran'");
-    // print(result);
-  }
-
   Future<List<Map<String, Object?>>?> fetchDataCashFlow() async {
     final db = await database;
     return await db?.query(tableKeuangan, orderBy: '$columnTanggal DESC');
+  }
+
+  Future<double> getSumIncomeForCurrentMonth() async {
+    Database? db = await instance.database;
+
+    final DateTime now = DateTime.now();
+    final String currentMonth =
+        '${now.year}-${now.month.toString().padLeft(2, '0')}';
+
+    final result = await db?.rawQuery('''
+    SELECT SUM(nominal) AS total_income
+    FROM keuangan
+    WHERE strftime('%Y-%m', tanggal) = '$currentMonth' AND tipe = 'Pemasukan'
+  ''');
+
+    final totalIncome = result?.first['total_income'];
+    return totalIncome != null ? totalIncome as double : 0.0;
+  }
+
+  Future<double> getSumOutcomeForCurrentMonth() async {
+    Database? db = await instance.database;
+
+    final DateTime now = DateTime.now();
+    final String currentMonth =
+        '${now.year}-${now.month.toString().padLeft(2, '0')}';
+
+    final result = await db?.rawQuery('''
+    SELECT SUM(nominal) AS total_outcome
+    FROM keuangan
+    WHERE strftime('%Y-%m', tanggal) = '$currentMonth' AND tipe = 'Pengeluaran'
+  ''');
+
+    final totalIncome = result?.first['total_income'];
+    return totalIncome != null ? totalIncome as double : 0.0;
   }
 }

@@ -1,7 +1,5 @@
 // ignore_for_file: avoid_unnecessary_containers, unused_field, non_constant_identifier_names, prefer_typing_uninitialized_variables
 
-import 'dart:math';
-
 import 'package:financial_management_app/models/chart_data.dart';
 import 'package:financial_management_app/data/database_helper.dart';
 import 'package:financial_management_app/screens/add_income_view.dart';
@@ -10,7 +8,6 @@ import 'package:financial_management_app/screens/detail_cash_flow_view.dart';
 import 'package:financial_management_app/screens/settings_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -28,19 +25,8 @@ class _HomePageState extends State<HomePage> {
 
   String? _totalPemasukan;
   String? _totalPengeluaran;
-
-  Future<String> _calcTotalIncome() async {
-    var total = (await dbHelper.calculateTotalIncome())[0]['total_pemasukan'];
-    return _totalPemasukan = total.toString();
-    // setState(() => _totalPemasukan = total);
-  }
-
-  Future<String> _calcTotalOutcome() async {
-    var total =
-        (await dbHelper.calculateTotalOutcome())[0]['total_pengeluaran'];
-    return _totalPengeluaran = total.toString();
-    // setState(() => _totalPengeluaran = total);
-  }
+  String totalIncome = '';
+  String totalOutcome = '';
 
   List<ChartData> incomeData = [];
   List<ChartData> expenseData = [];
@@ -49,25 +35,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     fetchDataFromDatabase();
-  }
-
-  Future<void> fetchDataFromDatabase() async {
-    final db = await dbHelper.database;
-    final result = await db?.query('keuangan');
-
-    setState(() {
-      incomeData = result!
-          .where((row) => row['tipe'] == 'Pemasukan')
-          .map((row) => ChartData(DateTime.parse(row['tanggal'] as String),
-              row['nominal'] as double))
-          .toList();
-
-      expenseData = result
-          .where((row) => row['tipe'] == 'Pengeluaran')
-          .map((row) => ChartData(DateTime.parse(row['tanggal'] as String),
-              row['nominal'] as double))
-          .toList();
-    });
   }
 
   @override
@@ -91,41 +58,23 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               width: double.infinity,
               child: Center(
-                child: FutureBuilder(
-                  future: _calcTotalOutcome(),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                child: FutureBuilder<String>(
+                  future: loadTotalOutcome(),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<String> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(),
-                          Visibility(
-                            visible: snapshot.hasData,
-                            child: Text(
-                              snapshot.data,
-                              style: const TextStyle(
-                                  color: Colors.black, fontSize: 24),
-                            ),
-                          )
-                        ],
-                      );
-                    } else if (snapshot.connectionState ==
-                        ConnectionState.done) {
-                      if (snapshot.hasError) {
-                        return const Text('Pengeluaran: Rp. -');
-                      } else if (snapshot.hasData) {
-                        // ignore: prefer_interpolation_to_compose_strings
-                        return Text('Pengeluaran: Rp. ' + snapshot.data,
-                            style: const TextStyle(
-                                color: Colors.red,
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold));
-                      } else {
-                        return const Text('Empty data');
-                      }
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (snapshot.hasData) {
+                      // Use the data when it's available
+                      return Text('Total Outcome: Rp. ${snapshot.data}',
+                          style: const TextStyle(
+                              color: Colors.red,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold));
                     } else {
-                      return Text('State: ${snapshot.connectionState}');
+                      return const Text('Empty data');
                     }
                   },
                 ),
@@ -134,41 +83,23 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               width: double.infinity,
               child: Center(
-                child: FutureBuilder(
-                  future: _calcTotalIncome(),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                child: FutureBuilder<String>(
+                  future: loadTotalIncome(),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<String> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(),
-                          Visibility(
-                            visible: snapshot.hasData,
-                            child: Text(
-                              snapshot.data,
-                              style: const TextStyle(
-                                  color: Colors.black, fontSize: 24),
-                            ),
-                          )
-                        ],
-                      );
-                    } else if (snapshot.connectionState ==
-                        ConnectionState.done) {
-                      if (snapshot.hasError) {
-                        return Text('Pemasukan: Rp. -${snapshot.error}');
-                      } else if (snapshot.hasData) {
-                        // ignore: prefer_interpolation_to_compose_strings
-                        return Text('Pemasukan: Rp. ' + snapshot.data,
-                            style: const TextStyle(
-                                color: Colors.green,
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold));
-                      } else {
-                        return const Text('Empty data');
-                      }
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (snapshot.hasData) {
+                      // Use the data when it's available
+                      return Text('Total Income: \Rp. ${snapshot.data}',
+                          style: const TextStyle(
+                              color: Colors.green,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold));
                     } else {
-                      return Text('State: ${snapshot.connectionState}');
+                      return const Text('Empty data');
                     }
                   },
                 ),
@@ -314,5 +245,44 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  // METHOD
+  Future<String> loadTotalIncome() async {
+    final sumIncome = await dbHelper.getSumIncomeForCurrentMonth();
+
+    return totalIncome = sumIncome.toString();
+    // setState(() {
+    //   totalIncome = sumIncome;
+    // });
+  }
+
+  Future<String> loadTotalOutcome() async {
+    final sumOutcome = await dbHelper.getSumOutcomeForCurrentMonth();
+
+    return totalOutcome = sumOutcome.toString();
+
+    // setState(() {
+    //   totalOutcome = sumOutcome;
+    // });
+  }
+
+  Future<void> fetchDataFromDatabase() async {
+    final db = await dbHelper.database;
+    final result = await db?.query('keuangan');
+
+    setState(() {
+      incomeData = result!
+          .where((row) => row['tipe'] == 'Pemasukan')
+          .map((row) => ChartData(DateTime.parse(row['tanggal'] as String),
+              row['nominal'] as double))
+          .toList();
+
+      expenseData = result
+          .where((row) => row['tipe'] == 'Pengeluaran')
+          .map((row) => ChartData(DateTime.parse(row['tanggal'] as String),
+              row['nominal'] as double))
+          .toList();
+    });
   }
 }
