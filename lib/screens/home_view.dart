@@ -22,8 +22,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final dbHelper = DatabaseHelper.instance;
 
-  String? _totalPemasukan;
-  String? _totalPengeluaran;
   String totalIncome = '';
   String totalOutcome = '';
 
@@ -272,13 +270,29 @@ class _HomePageState extends State<HomePage> {
     final db = await dbHelper.database;
     final now = DateTime.now();
     final currentMonth = DateFormat('yyyy-MM').format(now);
+    final firstDayOfMonth = '$currentMonth-01';
+    final lastDayOfMonth = '$currentMonth-31';
 
     final result = await db?.rawQuery(
-      "SELECT * FROM keuangan WHERE strftime('%Y-%m', tanggal) = ?",
-      [currentMonth],
+      "SELECT * FROM keuangan WHERE tanggal >= ? AND tanggal <= ?",
+      [firstDayOfMonth, lastDayOfMonth],
     );
 
     // final result = await db?.query('keuangan');
+
+    // setState(() {
+    //   incomeData = result!
+    //       .where((row) => row['tipe'] == 'Pemasukan')
+    //       .map((row) => ChartData(DateTime.parse(row['tanggal'] as String),
+    //           row['nominal'] as double))
+    //       .toList();
+
+    //   expenseData = result
+    //       .where((row) => row['tipe'] == 'Pengeluaran')
+    //       .map((row) => ChartData(DateTime.parse(row['tanggal'] as String),
+    //           row['nominal'] as double))
+    //       .toList();
+    // });
 
     setState(() {
       incomeData = result!
