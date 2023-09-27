@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
                       return Text('Error: ${snapshot.error}');
                     } else if (snapshot.hasData) {
                       // Use the data when it's available
-                      return Text('Total Outcome: Rp. ${snapshot.data}',
+                      return Text('Total Pengeluaran: Rp. ${snapshot.data}',
                           style: const TextStyle(
                               color: Colors.red,
                               fontSize: 15,
@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage> {
                       return Text('Error: ${snapshot.error}');
                     } else if (snapshot.hasData) {
                       // Use the data when it's available
-                      return Text('Total Income: \Rp. ${snapshot.data}',
+                      return Text('Total Pemasukan: \Rp. ${snapshot.data}',
                           style: const TextStyle(
                               color: Colors.green,
                               fontSize: 15,
