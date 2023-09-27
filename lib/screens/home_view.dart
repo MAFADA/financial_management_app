@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    fetchDataFromDatabase();
+    fetchDataFromDatabaseForGraph();
   }
 
   @override
@@ -266,7 +266,7 @@ class _HomePageState extends State<HomePage> {
     // });
   }
 
-  Future<void> fetchDataFromDatabase() async {
+  Future<void> fetchDataFromDatabaseForGraph() async {
     final db = await dbHelper.database;
     final now = DateTime.now();
     final currentMonth = DateFormat('yyyy-MM').format(now);
