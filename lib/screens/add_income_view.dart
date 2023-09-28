@@ -198,6 +198,7 @@ class _AddIncomePageState extends State<AddIncomePage> {
           DatabaseHelper.columnTipe: tipe,
           DatabaseHelper.columnNominal: nominal,
           DatabaseHelper.columnKeterangan: keterangan,
+          DatabaseHelper.columnUID: widget.uid
         };
 
         Keuangan keuangan = Keuangan.fromMap(row);

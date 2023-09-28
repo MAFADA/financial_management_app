@@ -197,17 +197,20 @@ class _AddOutcomePageState extends State<AddOutcomePage> {
           DatabaseHelper.columnTipe: tipe,
           DatabaseHelper.columnNominal: nominal,
           DatabaseHelper.columnKeterangan: keterangan,
+          DatabaseHelper.columnUID: widget.uid
         };
 
         Keuangan keuangan = Keuangan.fromMap(row);
         await dbHelper.saveDataKeuangan(keuangan).then((pemasukan) {
           _showMessageInScaffold('Successfully Saved');
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => HomePage(
-                        user_id: widget.uid,
-                      )));
+            context,
+            MaterialPageRoute(
+              builder: (_) => HomePage(
+                user_id: widget.uid,
+              ),
+            ),
+          );
         }).catchError((error) {
           _showMessageInScaffold('Error insert pengeluaran fail');
           print(error);

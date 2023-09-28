@@ -12,7 +12,7 @@ class DatabaseHelper {
   static final _databaseName = "  cashmanage_app.db";
   static final _databaseVersion = 1;
 
-  static final table = 'cashmanage_app';
+  static final table = 'user';
 
   static final columnId = 'id';
   static final columnUserName = 'username';
@@ -20,6 +20,7 @@ class DatabaseHelper {
 
   static final tableKeuangan = 'keuangan';
 
+  static final columnUID = 'user_id';
   static final columnTanggal = 'tanggal';
   static final columnTipe = 'tipe';
   static final columnNominal = 'nominal';
@@ -56,10 +57,12 @@ class DatabaseHelper {
     await db.execute('''
           CREATE TABLE $tableKeuangan (
             $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
+            $columnUID INTEGER,
             $columnTipe TEXT NOT NULL,
             $columnTanggal TEXT NOT NULL,
             $columnNominal REAL NOT NULL,
-            $columnKeterangan TEXT NOT NULL
+            $columnKeterangan TEXT NOT NULL,
+            FOREIGN KEY ($columnUID) REFERENCES user($columnId) ON DELETE CASCADE ON UPDATE CASCADE
           )
           ''');
   }
@@ -91,7 +94,7 @@ class DatabaseHelper {
   Future<bool?> checkPassword(int id, String currentPassword) async {
     final db = await database;
     final result = await db?.query(
-      'cashmanage_app',
+      table,
       where: 'id = ? AND password = ?',
       whereArgs: [id, currentPassword],
     );
@@ -101,7 +104,7 @@ class DatabaseHelper {
   Future<void> updatePassword(int id, String newPassword) async {
     final db = await database;
     await db?.update(
-      'cashmanage_app',
+      table,
       {'password': newPassword},
       where: 'id = ?',
       whereArgs: [id],
@@ -115,12 +118,12 @@ class DatabaseHelper {
     return await db!.insert(tableKeuangan, keuangan.toMap());
   }
 
-  Future<List<Map<String, Object?>>?> fetchDataCashFlow() async {
+  Future<List<Map<String, Object?>>?> fetchDataCashFlow(int? userId) async {
     final db = await database;
-    return await db?.query(tableKeuangan, orderBy: '$columnTanggal DESC');
+    return await db?.query(tableKeuangan, where: '$columnUID = ?', whereArgs: [userId], orderBy: '$columnTanggal DESC');
   }
 
-  Future<double> getSumIncomeForCurrentMonth() async {
+  Future<double> getSumIncomeForCurrentMonth(int? userId) async {
     Database? db = await instance.database;
 
     final DateTime now = DateTime.now();
@@ -130,14 +133,14 @@ class DatabaseHelper {
     final result = await db?.rawQuery('''
     SELECT SUM(nominal) AS total_income
     FROM keuangan
-    WHERE strftime('%Y-%m', tanggal) = '$currentMonth' AND tipe = 'Pemasukan'
+    WHERE strftime('%Y-%m', tanggal) = '$currentMonth' AND tipe = 'Pemasukan' AND user_id = '$userId'
   ''');
 
     final totalIncome = result?.first['total_income'];
     return totalIncome != null ? totalIncome as double : 0.0;
   }
 
-  Future<double> getSumOutcomeForCurrentMonth() async {
+  Future<double> getSumOutcomeForCurrentMonth(int? userId) async {
     Database? db = await instance.database;
 
     final DateTime now = DateTime.now();
@@ -147,7 +150,7 @@ class DatabaseHelper {
     final result = await db?.rawQuery('''
     SELECT SUM(nominal) AS total_outcome
     FROM keuangan
-    WHERE strftime('%Y-%m', tanggal) = '$currentMonth' AND tipe = 'Pengeluaran'
+    WHERE strftime('%Y-%m', tanggal) = '$currentMonth' AND tipe = 'Pengeluaran'  AND user_id = '$userId'
   ''');
 
     final totalIncome = result?.first['total_outcome'];

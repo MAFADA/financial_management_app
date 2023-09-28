@@ -105,7 +105,7 @@ class _HomePageState extends State<HomePage> {
             // TODO Grafik Pengeluaran dan Pemasukan
             Center(
               child: SizedBox(
-                width: 350,
+                width: 400,
                 child: SfCartesianChart(
                   primaryXAxis: DateTimeAxis(
                     dateFormat: DateFormat.yMd(),
@@ -222,9 +222,11 @@ class _HomePageState extends State<HomePage> {
                         height: 120,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.deepPurple,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0))),
+                            backgroundColor: Colors.deepPurple,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
                           onPressed: () {
                             Navigator.push(
                                 context,
@@ -248,7 +250,8 @@ class _HomePageState extends State<HomePage> {
 
   // METHOD
   Future<String> loadTotalIncome() async {
-    final sumIncome = await dbHelper.getSumIncomeForCurrentMonth();
+    final sumIncome =
+        await dbHelper.getSumIncomeForCurrentMonth(widget.user_id);
 
     return totalIncome = sumIncome.toString();
     // setState(() {
@@ -257,7 +260,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<String> loadTotalOutcome() async {
-    final sumOutcome = await dbHelper.getSumOutcomeForCurrentMonth();
+    final sumOutcome =
+        await dbHelper.getSumOutcomeForCurrentMonth(widget.user_id);
 
     return totalOutcome = sumOutcome.toString();
 
@@ -274,7 +278,7 @@ class _HomePageState extends State<HomePage> {
     final lastDayOfMonth = '$currentMonth-31';
 
     final result = await db?.rawQuery(
-      "SELECT * FROM keuangan WHERE tanggal >= ? AND tanggal <= ?",
+      "SELECT * FROM keuangan WHERE user_id = '${widget.user_id}' AND tanggal >= ? AND tanggal <= ?",
       [firstDayOfMonth, lastDayOfMonth],
     );
 

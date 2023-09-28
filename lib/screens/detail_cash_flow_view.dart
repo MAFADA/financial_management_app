@@ -1,4 +1,5 @@
 import 'package:financial_management_app/data/database_helper.dart';
+import 'package:financial_management_app/screens/home_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -38,7 +39,7 @@ class _DetailCashFlowState extends State<DetailCashFlowPage> {
             SizedBox(
               height: 600,
               child: FutureBuilder(
-                future: dbHelper.fetchDataCashFlow(),
+                future: dbHelper.fetchDataCashFlow(widget.uid),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator(); // Display a loading indicator while fetching data.
@@ -139,6 +140,30 @@ class _DetailCashFlowState extends State<DetailCashFlowPage> {
           ],
         ),
       ),
+      bottomNavigationBar: Container(
+          // margin: const EdgeInsets.only(left: 20, right: 20, top: 5),
+          child: ElevatedButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => HomePage(
+                user_id: widget.uid,
+              ),
+            ),
+          );
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.deepPurple,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0.0),
+          ),
+        ),
+        child: const Text(
+          '<<Kembali',
+          style: TextStyle(color: Colors.white),
+        ),
+      )),
     );
   }
 }
